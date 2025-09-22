@@ -48,8 +48,7 @@ public class Robot extends TimedRobot {
     if(m_cams.frontCamHasTarget()) {
       m_robotContainer.drivetrain.addVisionMeasurement(
         m_cams.getPoseRelativeFrontCam(),
-        m_timer.get(),
-        m_cams.getStandardDevs()
+        m_timer.get()
         );
     }
   }
