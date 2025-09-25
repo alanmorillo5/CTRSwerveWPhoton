@@ -22,8 +22,6 @@ public class Robot extends TimedRobot {
 
   private AprilTagFieldLayout m_layout;
 
-  private Timer m_timer;
-
   public Robot() {
     try {
       m_layout = new AprilTagFieldLayout(
@@ -36,9 +34,6 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer = new RobotContainer();
-
-    m_timer = new Timer();
-    m_timer.start();
   }
 
   @Override
@@ -48,7 +43,7 @@ public class Robot extends TimedRobot {
     if(m_cams.frontCamHasTarget()) {
       m_robotContainer.drivetrain.addVisionMeasurement(
         m_cams.getPoseRelativeFrontCam(),
-        m_timer.get()
+        m_cams.getLatestTimeStamp()
         );
     }
   }

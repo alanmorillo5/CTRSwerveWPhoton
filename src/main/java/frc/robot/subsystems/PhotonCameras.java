@@ -13,7 +13,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 public class PhotonCameras extends SubsystemBase{
     private PhotonCamera frontCam;
@@ -24,6 +26,8 @@ public class PhotonCameras extends SubsystemBase{
 
     private Transform3d frontCamToRobot;
 
+    Timer timer;
+
     double[] x_poses;
     double[] y_poses;
     double[] theta_poses;
@@ -33,6 +37,9 @@ public class PhotonCameras extends SubsystemBase{
         frontCam = new PhotonCamera("frontCam");
 
         frontCamToRobot = new Transform3d();
+
+        timer = new Timer();
+        timer.start();
 
         frontCamResult = null;
         this.layout = layout;
