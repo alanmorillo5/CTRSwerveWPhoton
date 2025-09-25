@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.PhotonCameras;
@@ -41,10 +41,22 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     if(m_cams.frontCamHasTarget()) {
-      m_robotContainer.drivetrain.addVisionMeasurement(
-        m_cams.getPoseRelativeFrontCam(),
-        m_cams.getLatestTimeStamp()
-        );
+      try{
+        m_robotContainer.drivetrain.addVisionMeasurement(
+          m_cams.getPoseRelativeFrontCam(),
+          m_cams.getLatestTimeStamp()
+          );
+      } catch(Exception e) {
+        System.out.println("Failed to add vision measurement");
+      }
+      try{
+      SmartDashboard.putNumber("Camera area", m_cams.getFrontArea());
+      SmartDashboard.putBoolean("Has target", m_cams.frontCamHasTarget());
+      }
+      catch (Exception e){
+        SmartDashboard.putNumber("Camera area", -1);
+        SmartDashboard.putBoolean("Has target", false);
+      }
     }
   }
 

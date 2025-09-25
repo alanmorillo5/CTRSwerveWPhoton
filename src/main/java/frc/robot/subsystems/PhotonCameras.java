@@ -15,6 +15,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CameraConstants;
 
 
 public class PhotonCameras extends SubsystemBase{
@@ -26,20 +27,22 @@ public class PhotonCameras extends SubsystemBase{
 
     private Transform3d frontCamToRobot;
 
-    Timer timer;
+    private Timer timer;
+    private double latestTimeStamp;
 
-    double[] x_poses;
-    double[] y_poses;
-    double[] theta_poses;
-    int counter;
+    private double[] x_poses;
+    private double[] y_poses;
+    private double[] theta_poses;
+    private int counter;
 
     public PhotonCameras(AprilTagFieldLayout layout) {
         frontCam = new PhotonCamera("frontCam");
 
-        frontCamToRobot = new Transform3d();
+        frontCamToRobot = CameraConstants.kFrontCameraToRobotTransform;
 
         timer = new Timer();
         timer.start();
+        latestTimeStamp = timer.get();
 
         frontCamResult = null;
         this.layout = layout;
@@ -107,9 +110,14 @@ public class PhotonCameras extends SubsystemBase{
             y_poses[counter] = test_pose.getY();
             theta_poses[counter] = test_pose.getRotation().getZ();
             counter = (counter + 1) % 300;
+            latestTimeStamp = timer.get();
             return robotPose.toPose2d();
         }
         return null;
+    }
+
+    public double getLatestTimeStamp() {
+        return latestTimeStamp;
     }
 
     public int getBestFrontCamFiducialId() {
