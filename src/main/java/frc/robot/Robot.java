@@ -39,16 +39,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
+    try {
     if(m_cams.frontCamHasTarget()) {
-      try{
         m_robotContainer.drivetrain.addVisionMeasurement(
           m_cams.getPoseRelativeFrontCam(),
           m_cams.getLatestTimeStamp()
-          );
-      } catch(Exception e) {
-        System.out.println("Failed to add vision measurement");
+        );
       }
+    } catch (Exception e) {
+        //System.out.println("Failed to add vision measurement");
+    }
       try{
       SmartDashboard.putNumber("Camera area", m_cams.getFrontArea());
       SmartDashboard.putBoolean("Has target", m_cams.frontCamHasTarget());
@@ -58,7 +58,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Has target", false);
       }
     }
-  }
 
   @Override
   public void disabledInit() {}
