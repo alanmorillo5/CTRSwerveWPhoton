@@ -6,11 +6,14 @@ package frc.robot;
 
 import java.io.IOException;
 
+import com.ctre.phoenix6.Orchestra;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.swerve.Orchestrate;
 import frc.robot.subsystems.PhotonCameras;
 
 public class Robot extends TimedRobot {
@@ -34,6 +37,19 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer = new RobotContainer();
+  }
+
+  @Override
+  public void robotInit() {
+
+    try{
+    Orchestra orchestra = new Orchestra();
+    String midiString = "put midi here";
+    Orchestrate music = new Orchestrate(m_robotContainer.drivetrain, orchestra, midiString);
+    CommandScheduler.getInstance().schedule(music);
+    } catch (Exception e){
+        System.out.println("Failed to play music" + e.getMessage());
+    }
   }
 
   @Override
