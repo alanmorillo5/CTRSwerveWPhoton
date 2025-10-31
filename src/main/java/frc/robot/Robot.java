@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
 
     try{
     Orchestra orchestra = new Orchestra();
-    String midiString = "put midi here";
+    String midiString = "/home/lvuser/deploy/output.chrp";
     Orchestrate music = new Orchestrate(m_robotContainer.drivetrain, orchestra, midiString);
     CommandScheduler.getInstance().schedule(music);
     } catch (Exception e){
