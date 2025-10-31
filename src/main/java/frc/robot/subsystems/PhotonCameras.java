@@ -6,13 +6,9 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CameraConstants;
@@ -30,13 +26,8 @@ public class PhotonCameras extends SubsystemBase{
     private Timer timer;
     private double latestTimeStamp;
 
-    private double[] x_poses;
-    private double[] y_poses;
-    private double[] theta_poses;
-    private int counter;
-
     public PhotonCameras(AprilTagFieldLayout layout) {
-        frontCam = new PhotonCamera("frontCam");
+        frontCam = new PhotonCamera(CameraConstants.kFrontCameraName);
 
         frontCamToRobot = CameraConstants.kFrontCameraToRobotTransform;
 
@@ -46,37 +37,11 @@ public class PhotonCameras extends SubsystemBase{
 
         frontCamResult = null;
         this.layout = layout;
-        counter = 0;
-        x_poses = new double[300];
-        y_poses = new double[300];
-        theta_poses = new double[300];
     }
 
     public void periodic() {
 
         frontCamResult = frontCam.getLatestResult();
-    }
-
-    public Matrix<N3, N1> getStandardDevs() {
-        Matrix<N3, N1> stdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1());
-        stdDevs.set(1, 1, StandardDev(x_poses));
-        stdDevs.set(2, 1, StandardDev(y_poses));
-        stdDevs.set(3, 1, StandardDev(theta_poses));
-        return stdDevs;
-    }
-
-    private double StandardDev(double[] test) {
-        double mean_sum = 0;
-        for(int i = 0; i < test.length; i++) {
-            mean_sum += test[i];
-        }
-        double mean = mean_sum/(double)(test.length);
-
-        double var_sum = 0;
-        for(int i = 0; i < test.length; i++) {
-            var_sum += Math.pow(test[i] - mean, 2);
-        }
-        return Math.sqrt(var_sum/(double)(test.length - 1));
     }
 
     public boolean frontCamHasTarget() {
@@ -105,11 +70,6 @@ public class PhotonCameras extends SubsystemBase{
                 layout.getTagPose(target.getFiducialId()).get(),
                 frontCamToRobot
             );
-            Transform3d test_pose = target.getBestCameraToTarget();
-            x_poses[counter] = test_pose.getX();
-            y_poses[counter] = test_pose.getY();
-            theta_poses[counter] = test_pose.getRotation().getZ();
-            counter = (counter + 1) % 300;
             latestTimeStamp = timer.get();
             return robotPose.toPose2d();
         }
